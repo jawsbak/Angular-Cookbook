@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ContentType } from './constants/content-type';
 import { IMAGE_URL } from './constants/image-url';
@@ -6,10 +7,10 @@ import { LOREM_IPSUM_TEXT } from './constants/lorem-ipsum-text';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = "Using CDK Clipboard to work with system clipboard";
+  title = 'Using CDK Clipboard to work with system clipboard';
   contentCopied: ContentType;
   contentTypes = ContentType;
   loremIpsumText = LOREM_IPSUM_TEXT;
@@ -22,8 +23,14 @@ export class AppComponent implements OnInit {
     }
   }
 
-  constructor() {
+  constructor(private clipboard: Clipboard) {
     this.resetCopiedHash();
+  }
+
+  async copyImageUrl(srcImageUrl) {
+    const data = await fetch(srcImageUrl);
+    const blob = await data.blob();
+    this.clipboard.copy(URL.createObjectURL(blob));
   }
 
   copyContent($event, type: ContentType) {
@@ -33,8 +40,7 @@ export class AppComponent implements OnInit {
     this.contentCopied = type;
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   resetCopiedHash() {
     this.contentCopied = null;
