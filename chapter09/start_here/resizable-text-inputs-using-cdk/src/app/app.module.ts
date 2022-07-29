@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { TextFieldModule } from '@angular/cdk/text-field';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
     ChatMessagesComponent,
     ChatComponent,
   ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule],
+  imports: [BrowserModule, FormsModule, AppRoutingModule, TextFieldModule],
   providers: [],
   bootstrap: [AppComponent],
 })
