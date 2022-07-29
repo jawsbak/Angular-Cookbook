@@ -2,6 +2,7 @@
 
 .cdk-overlay-container {
   display: block;
+
   &.z-index-top {
     z-index: 2050;
   }
@@ -96,11 +97,30 @@
   min-height: 1px;
 }
 
+
 .menu-popover {
   min-width: 150px;
   height: auto;
   border: 1px solid white;
   border-radius: 8px;
+
+  &::before {
+    top: -10px;
+    border-width: 0px 10px 10px 10px;
+    border-color: transparent transparent white transparent;
+    position: absolute;
+    content: '';
+    right: 5%;
+    border-style: solid;
+  }
+  &--up {
+    transform: translateY(-20px);
+    &::before {
+      top: unset !important;
+      transform: rotate(180deg);
+      bottom: -10px;
+    }
+  }
 
   &__list {
     color: #333;
@@ -108,10 +128,12 @@
     width: 100%;
     box-shadow: 0px 2px 14px 4px rgba(0, 0, 0, 0.1);
     padding: 8px 0;
+
     &__item {
       transition: all 0.2s ease;
       padding: 8px 16px;
       cursor: pointer;
+
       &:hover {
         background-color: #333;
         color: white;
