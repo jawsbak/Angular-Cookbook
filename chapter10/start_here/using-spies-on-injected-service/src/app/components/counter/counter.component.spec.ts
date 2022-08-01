@@ -6,6 +6,7 @@ import { CounterComponent } from './counter.component';
 describe('CounterComponent', () => {
   let component: CounterComponent;
   let fixture: ComponentFixture<CounterComponent>;
+  let counterService: CounterService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,6 +19,7 @@ describe('CounterComponent', () => {
     fixture = TestBed.createComponent(CounterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    counterService = TestBed.inject(CounterService);
   });
 
   it('should increment the counter value upon tapping increment button', () => {
@@ -57,25 +59,26 @@ describe('CounterComponent', () => {
   });
 
   it('should call the localStorage.getItem method on component init', () => {
+    spyOn(counterService, 'getFromStorage');
     component.ngOnInit();
-    // expect
+    expect(counterService.getFromStorage).toHaveBeenCalled();
   });
 
   it('should retrieve the last saved value from localStorage on component init', () => {
-    // spy
-
+    spyOn(counterService, 'getFromStorage').and.returnValue(12);
     component.ngOnInit();
     expect(component.counter).toBe(12);
   });
 
   it('should save the new counterValue to localStorage on increment, decrement and reset', () => {
+    spyOn(counterService, 'saveToStorage');
     component.counter = 0;
     component.increment();
-    // expect
+    expect(counterService.saveToStorage).toHaveBeenCalledWith(1);
     component.counter = 20;
     component.decrement();
-    // expect
+    expect(counterService.saveToStorage).toHaveBeenCalledWith(19);
     component.reset();
-    // expect
+    expect(counterService.saveToStorage).toHaveBeenCalledWith(0);
   });
 });
