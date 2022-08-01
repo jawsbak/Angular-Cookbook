@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../core/services/user.service';
 import { IUser } from '../core/interfaces/user.interface';
 import { FormControl, FormGroup } from '@angular/forms';
-import { takeWhile } from 'rxjs/operators';
+import { debounceTime, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
@@ -23,7 +23,10 @@ export class UsersComponent implements OnInit {
     this.searchUsers();
     this.searchForm
       .get('username')
-      .valueChanges.pipe(takeWhile(() => !!this.componentAlive))
+      .valueChanges.pipe(
+        takeWhile(() => !!this.componentAlive),
+        debounceTime(5000)
+      )
       .subscribe(() => {
         this.searchUsers();
       });

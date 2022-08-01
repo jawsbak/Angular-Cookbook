@@ -12,7 +12,9 @@ context('Users', () => {
   });
 
   it('should get the users list on searching', () => {
-    cy.get('#searchInput').type('irin');
+    cy.intercept('https://api.randomuser.me/*').as('searchUsers');
+    cy.get('#searchInput').type('esi');
+    cy.wait('@searchUsers');
     cy.get('app-user-card').should((domList) => {
       expect(domList.length).equal(1);
     });
