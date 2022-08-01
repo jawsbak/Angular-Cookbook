@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { IUser } from '../../interfaces/user.interface';
 
@@ -6,13 +11,22 @@ import { IUser } from '../../interfaces/user.interface';
   selector: 'app-user-card',
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserCardComponent implements OnInit {
   @Input() user: IUser;
   @Input() index: number;
   constructor(private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!window['appLogs']) {
+      window['appLogs'] = {};
+    }
+
+    if (!window['appLogs'][this.user.email]) {
+      window['appLogs'][this.user.email] = 0;
+    }
+  }
 
   cardClicked() {
     this.router.navigate([`/users/${this.user.login.uuid}`]);
@@ -30,6 +44,7 @@ export class UserCardComponent implements OnInit {
   }
 
   idUsingFactorial(num, length = 1) {
+    window['appLogs'][this.user.email]++;
     if (num === 1) {
       return this.createUniqueId(length);
     } else {
