@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CounterService } from 'src/app/core/services/counter.service';
-
+import CounterServiceMock from 'src/__mocks__/services/counter.service.mock';
 import { CounterComponent } from './counter.component';
 
 describe('CounterComponent', () => {
@@ -10,7 +10,10 @@ describe('CounterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [CounterComponent],
-      providers: [CounterService],
+      providers: [{
+        provide: CounterService,
+        useValue: CounterServiceMock
+      }],
     }).compileComponents();
   });
 
@@ -56,27 +59,25 @@ describe('CounterComponent', () => {
     expect(component.counter).toBe(component.MIN_VALUE);
   });
 
-  it('should call the localStorage.getItem method on component init', () => {
-    spyOn(localStorage, 'getItem');
+  it('should call the CounterService.getFromStorage method on component init', () => {
     component.ngOnInit();
-    expect(localStorage.getItem).toBeCalled();
+    expect(CounterServiceMock.getFromStorage).toBeCalled();
   });
 
-  it('should retrieve the last saved value from localStorage on component init', () => {
-    localStorage.setItem('counterValue', '12');
+  it('should retrieve the last saved value from CounterService on component init', () => {
+    CounterServiceMock.getFromStorage.mockReturnValue(12);
     component.ngOnInit();
     expect(component.counter).toBe(12);
   });
 
-  it('should save the new counterValue to localStorage on increment, decrement and reset', () => {
-    spyOn(localStorage, 'setItem');
+  it('should save the new counterValue via CounterService on increment, decrement and reset', () => {
     component.counter = 0;
     component.increment();
-    expect(localStorage.setItem).toHaveBeenCalledWith('counterValue', '1');
+    expect(CounterServiceMock.saveToStorage).toHaveBeenCalledWith(1);
     component.counter = 20;
     component.decrement();
-    expect(localStorage.setItem).toHaveBeenCalledWith('counterValue', '19');
+    expect(CounterServiceMock.saveToStorage).toHaveBeenCalledWith(19);
     component.reset();
-    expect(localStorage.setItem).toHaveBeenCalledWith('counterValue', '0');
+    expect(CounterServiceMock.saveToStorage).toHaveBeenCalledWith(0);
   });
 });
